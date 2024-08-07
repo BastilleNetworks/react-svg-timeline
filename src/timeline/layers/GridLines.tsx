@@ -1,9 +1,9 @@
 import { ScaleLinear, scaleTime } from 'd3-scale'
 import { timeMonth } from 'd3-time'
-import { addDays, addMonths, addWeeks, differenceInDays, endOfMonth, endOfWeek, format, isBefore, isEqual, startOfWeek } from 'date-fns'
+import { addDays, addHours, addMonths, addWeeks, differenceInDays, differenceInHours, endOfMonth, endOfWeek, format, isBefore, isEqual, startOfWeek } from 'date-fns'
 import { CSSProperties } from 'react'
 import { Domain } from '../model'
-import { dayDuration, monthDuration, weekDuration, yearDuration, ZoomLevels } from '../shared/ZoomScale'
+import { dayDuration, monthDuration, oneHour, weekDuration, yearDuration, ZoomLevels } from '../shared/ZoomScale'
 import { XAxisTheme } from '../theme/model'
 import { useTimelineTheme } from '../theme/useTimelineTheme'
 import { range } from '../utils'
@@ -32,6 +32,8 @@ export const GridLines = ({ height, domain, smallerZoomScale, timeScale }: Props
       return <MonthView height={height} domain={domain} timeScale={timeScale} />
     case ZoomLevels.ONE_DAY:
       return <DayView height={height} domain={domain} timeScale={timeScale} />
+    case ZoomLevels.ONE_HOUR:
+      return <HourView height={height} domain={domain} timeScale={timeScale} />
     default:
       return <MonthView height={height} domain={domain} timeScale={timeScale} showWeekStripes={true} />
   }
@@ -234,6 +236,40 @@ const DayView = ({ height, domain, timeScale }: DayViewProps) => {
         <line style={gridLineStyle} x1={x} y1={0} x2={x} y2={height - 10} />
         <text style={textStyle} x={xMidDay} y="90%" fontSize={fontSize}>
           {format(day, 'MMM, d')}
+        </text>
+      </g>
+    )
+  })
+
+  return <g>{lines}</g>
+}
+
+/* ·················································································································· */
+/*  HOUR
+/* ·················································································································· */
+
+interface HourViewProps extends Omit<Props, 'smallerZoomScale'> {}
+
+const HourView = ({ height, domain, timeScale }: HourViewProps) => {
+  const xAxisTheme: XAxisTheme = useTimelineTheme().xAxis
+  const textStyle = useYearViewTextStyle()
+  const gridLineStyle = useGridLineStyle()
+
+  const startDate = new Date(domain[0])
+  const endDate = new Date(domain[1])
+
+  const lines = range(0, differenceInHours(endDate, startDate)).map((sliceHour) => {
+    const hour = addHours(startDate, sliceHour)
+    const x = timeScale(hour)!
+    const hourTimestamp = hour.getTime()
+    const xMidHour = timeScale(hourTimestamp + oneHour / 2)
+    const fontSize = xAxisTheme.dayLabelFontSize ? xAxisTheme.dayLabelFontSize : 18
+
+    return (
+      <g key={x}>
+        <line style={gridLineStyle} x1={x} y1={0} x2={x} y2={height - 10} />
+        <text style={textStyle} x={xMidHour} y="90%" fontSize={fontSize}>
+          {format(hour, 'MMM, d')}
         </text>
       </g>
     )
