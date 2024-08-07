@@ -30,6 +30,7 @@ export interface XAxisTheme {
   readonly labelColor: string
   readonly monthLabelFontSize?: number
   readonly yearLabelFontSize?: number
+  readonly dayLabelFontSize? : number
 }
 
 export interface GridTheme {
