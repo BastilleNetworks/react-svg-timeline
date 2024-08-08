@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { useZoomLevels } from './useZoomLevels'
-import { min, max } from 'd3-array'
+import { max, min } from 'd3-array'
 import { ScaleBand, scaleBand, ScaleLinear, scaleLinear } from 'd3-scale'
 import { Domain, TimelineEvent, TimelineLane } from '../model'
 import { ZoomLevels } from '../shared/ZoomScale'
+import { useZoomLevels } from './useZoomLevels'
 
 export const calcMaxDomain = <EID extends string, LID extends string, E extends TimelineEvent<EID, LID>>(
   events: ReadonlyArray<E>

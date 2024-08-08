@@ -1,4 +1,3 @@
-import React from 'react'
 
 import { InteractionModeType, Timeline } from '../../timeline'
 
@@ -11,7 +10,7 @@ export const App = () => {
       <Timeline
         events={dataSet.events}
         lanes={dataSet.lanes}
-        dateFormat={(date) => `${date}`}
+        dateFormat={(ms) => new Date(ms).toLocaleString()}
         width={1000}
         height={300}
         enabledInteractions={[
