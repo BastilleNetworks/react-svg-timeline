@@ -1,4 +1,3 @@
-
 import { InteractionModeType, Timeline } from '../../timeline'
 
 import dataSet from '../data/smallDataset.json'
@@ -11,7 +10,7 @@ export const App = () => {
         events={dataSet.events}
         lanes={dataSet.lanes}
         dateFormat={(ms) => new Date(ms).toLocaleString()}
-        width={1000}
+        width={600}
         height={300}
         enabledInteractions={[
           InteractionModeType.Hover,

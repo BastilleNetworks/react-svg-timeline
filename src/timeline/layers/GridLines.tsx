@@ -1,9 +1,30 @@
 import { ScaleLinear, scaleTime } from 'd3-scale'
 import { timeHour, timeMinute, timeMonth } from 'd3-time'
-import { addDays, addHours, addMinutes, addMonths, addWeeks, differenceInDays, endOfMonth, endOfWeek, format, isBefore, isEqual, startOfWeek } from 'date-fns'
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  addMonths,
+  addWeeks,
+  differenceInDays,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isBefore,
+  isEqual,
+  startOfWeek,
+} from 'date-fns'
 import { CSSProperties } from 'react'
 import { Domain } from '../model'
-import { dayDuration, monthDuration, oneHour, oneMin, weekDuration, yearDuration, ZoomLevels } from '../shared/ZoomScale'
+import {
+  dayDuration,
+  monthDuration,
+  oneHour,
+  oneMin,
+  weekDuration,
+  yearDuration,
+  ZoomLevels,
+} from '../shared/ZoomScale'
 import { XAxisTheme } from '../theme/model'
 import { useTimelineTheme } from '../theme/useTimelineTheme'
 import { range } from '../utils'
@@ -258,8 +279,6 @@ const DayView = ({ height, domain, timeScale }: DayViewProps) => {
   return <g>{lines}</g>
 }
 
-
-
 interface NHourViewProps extends Omit<Props, 'smallerZoomScale'> {
   numberOfHours: number
 }
@@ -280,7 +299,6 @@ const NHourView = ({ height, domain, timeScale, numberOfHours }: NHourViewProps)
     const x = timeScale(hourTimestamp)!
     const xSixHour = timeScale(hourTimestamp + width / 2)
 
-
     return (
       <g key={hourTimestamp}>
         <line style={gridLineStyle} x1={x} y1={0} x2={x} y2={height - 10} />
@@ -294,12 +312,25 @@ const NHourView = ({ height, domain, timeScale, numberOfHours }: NHourViewProps)
   return <g>{lines}</g>
 }
 
+const useMinuteViewTextStyle = (numberOfMinutes: number): CSSProperties => {
+  const theme = useTimelineTheme()
+  return {
+    fill: theme.xAxis.labelColor,
+    opacity: 0.5,
+    fontFamily: theme.base.fontFamilyCaption,
+    fontSize: numberOfMinutes < 5 ? 14 : 18,
+    fontWeight: 'bold',
+    textAnchor: 'middle',
+    cursor: 'default',
+  }
+}
+
 interface NMinutesViewProps extends Omit<Props, 'smallerZoomScale'> {
   numberOfMinutes: number
 }
 
 const NMinuteView = ({ height, domain, timeScale, numberOfMinutes }: NMinutesViewProps) => {
-  const textStyle = useMonthViewTextStyle()
+  const textStyle = useMinuteViewTextStyle(numberOfMinutes)
   const gridLineStyle = useGridLineStyle()
   const width = oneMin * numberOfMinutes
 
@@ -314,7 +345,6 @@ const NMinuteView = ({ height, domain, timeScale, numberOfMinutes }: NMinutesVie
     const x = timeScale(minuteTimestamp)!
     const xSixHour = timeScale(minuteTimestamp + width / 2)
 
-
     return (
       <g key={minuteTimestamp}>
         <line style={gridLineStyle} x1={x} y1={0} x2={x} y2={height - 10} />
@@ -327,4 +357,3 @@ const NMinuteView = ({ height, domain, timeScale, numberOfMinutes }: NMinutesVie
 
   return <g>{lines}</g>
 }
-
